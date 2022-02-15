@@ -11,6 +11,10 @@ size_t provide_pubkey(uint8_t *const io_buffer, cx_ecfp_public_key_t const *cons
     check_null(io_buffer);
     check_null(pubkey);
     size_t tx = 0;
+    // TODO: can pubkey->W_len be of size 0? What to do then?
+    if (os_global_pin_is_validated() != BOLOS_UX_OK) {
+        THROW(EXC_SECURITY);
+    }
     io_buffer[tx++] = pubkey->W_len;
     memmove(io_buffer + tx, pubkey->W, pubkey->W_len);
     tx += pubkey->W_len;
